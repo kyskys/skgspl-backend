@@ -27,6 +27,7 @@ import skgspl.service.api.SubjectService;
 import skgspl.service.api.UserService;
 import skgspl.web.dto.lesson.LessonCreateDto;
 import skgspl.web.dto.lesson.LessonGetDto;
+import skgspl.web.dto.lesson.LessonTimetableGetDto;
 import skgspl.web.dto.lesson.LessonUpdateDto;
 import skgspl.service.api.LessonTimeService;
 
@@ -55,8 +56,6 @@ public class LessonControllerImpl {
 	public LessonGetDto createLesson(@Valid @RequestBody LessonCreateDto dto) {
 		Lesson lesson = new Lesson();
 		lesson.setDate(DateFormatterUtil.getDateFromString(dto.getDate()));
-		lesson.setLecturer(userService.get(dto.getLecturer()));
-		lesson.setRoomNumber(dto.getRoom());
 		lesson.setSubject(subjectService.get(dto.getSubject()));
 		lesson.setTime(lessonTimeService.get(dto.getTime()));
 		return new LessonGetDto(lessonService.create(lesson));
@@ -84,9 +83,9 @@ public class LessonControllerImpl {
 			lesson.setTime(lessonTimeService.get(idLessonTime));
 		}
 		String name = dto.getName();
-		if (!StringUtils.isEmpty(name)) {
-			lesson.setName(name);
-		}
+//		if (!StringUtils.isEmpty(name)) {
+//			lesson.setName(name);
+//		}
 		lessonService.update(lesson);
 	}
 
@@ -132,14 +131,16 @@ public class LessonControllerImpl {
 		return lessonTimeService.getDictionary();
 	}
 
-//	@RequestMapping(value = "timetable/{group}", method = RequestMethod.GET)
-//	public List<TimetableItemDto> getTimetableByWeek(@RequestParam("day") String startOfWeek,
-//			@PathVariable("group") Long idGroup) {
-//		LocalDateTime day = DateFormatterUtil.getDateFromString(startOfWeek);
-//		return lessonService.getLessonsByWeek(day, idGroup).stream().map(TimetableItemDto::new)
-//				.collect(Collectors.toList());
-//	}
-//
+	
+	
+	@RequestMapping(value = "timetable/{group}", method = RequestMethod.GET)
+	public List<LessonTimetableGetDto> getTimetableByWeek(@RequestParam("day") String startOfWeek,
+			@PathVariable("group") Long idGroup) {
+		LocalDateTime day = DateFormatterUtil.getDateFromString(startOfWeek);
+		return lessonService.getLessonsByWeek(day, idGroup).stream().map(LessonTimetableGetDto::new)
+				.collect(Collectors.toList());
+	}
+
 //	@RequestMapping(value = "{id}/add/group", method = RequestMethod.POST)
 //	public void addGroupsToLesson(@PathVariable("id") Long idLesson, @RequestBody List<Long> groups) {
 //		lessonService.addGroupsToLesson(idLesson, groups);

@@ -16,7 +16,7 @@ public class LessonTimeItemDto {
 	}
 
 	public LessonTimeItemDto(Lesson lesson) {
-		this.name = lesson.getName();
+		//this.name = lesson.getName();
 		//this.lection = lesson.getLection().getName();
 		//this.startTime = DateFormatterUtil.getTimeAsString(lesson.getTime().getStartTime());
 		//this.endTime = DateFormatterUtil.getTimeAsString(lesson.getTime().getEndTime());

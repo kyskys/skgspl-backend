@@ -1,5 +1,6 @@
 package skgspl.dao.api;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import skgspl.dao.search.LessonSearchParams;
@@ -15,5 +16,7 @@ public interface LessonDao extends AbstractDao<Lesson>, Searchable<LessonSearchP
 	List<Lesson> getLessonsByGroupId(Long idGroup);
 
 	List<Lesson> getLessonsWithoutGroup(Long idGroup);
+
+	List<Lesson> getTimetableByWeek(LocalDateTime day, Long idGroup);
 
 }

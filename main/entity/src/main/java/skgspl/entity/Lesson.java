@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -19,25 +21,19 @@ public class Lesson extends AbstractEntity {
 	@JoinColumn(name = "subject_id")
 	private Subject subject;
 
-	@Column(name = "name")
-	private String name;
-
-	@ManyToMany(mappedBy = "lessons")
-	private List<Group> groups;
-
 	@OneToOne
-	@JoinColumn(name = "lecturer_id")
-	private User lecturer;
-
-	@OneToOne
-	@JoinColumn(name = "lesson_time")
-	private LessonTime time;
+	@JoinColumn(name="group_id")
+	private Group group;
 
 	@Column(name = "date")
 	private LocalDateTime date;
 	
-	@Column(name="room_number")
-	private Integer roomNumber;
+	@OneToMany(mappedBy="lesson", fetch = FetchType.LAZY)
+	private List<LessonLocation> locations;
+	
+	@OneToOne
+	@JoinColumn(name = "time_id")
+	private LessonTime time;
 
 	public Subject getSubject() {
 		return subject;
@@ -47,36 +43,20 @@ public class Lesson extends AbstractEntity {
 		this.subject = subject;
 	}
 
-	public String getName() {
-		return name;
+//	public String getName() {
+//		return name;
+//	}
+//
+//	public void setName(String name) {
+//		this.name = name;
+//	}
+
+	public Group getGroup() {
+		return group;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public List<Group> getGroups() {
-		return groups;
-	}
-
-	public void setGroups(List<Group> groups) {
-		this.groups = groups;
-	}
-
-	public User getLecturer() {
-		return lecturer;
-	}
-
-	public void setLecturer(User lecturer) {
-		this.lecturer = lecturer;
-	}
-
-	public LessonTime getTime() {
-		return time;
-	}
-
-	public void setTime(LessonTime time) {
-		this.time = time;
+	public void setGroup(Group group) {
+		this.group = group;
 	}
 
 	public LocalDateTime getDate() {
@@ -87,12 +67,21 @@ public class Lesson extends AbstractEntity {
 		this.date = date;
 	}
 
-	public Integer getRoomNumber() {
-		return roomNumber;
+	public List<LessonLocation> getLocations() {
+		return locations;
 	}
 
-	public void setRoomNumber(Integer roomNumber) {
-		this.roomNumber = roomNumber;
+	public void setLocations(List<LessonLocation> locations) {
+		this.locations = locations;
 	}
+
+	public LessonTime getTime() {
+		return time;
+	}
+
+	public void setTime(LessonTime time) {
+		this.time = time;
+	}
+
 
 }

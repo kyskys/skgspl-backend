@@ -1,9 +1,11 @@
 package skgspl.dao.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -17,7 +19,6 @@ import skgspl.dao.api.LessonDao;
 import skgspl.dao.search.LessonSearchParams;
 import skgspl.dao.search.SortParam;
 import skgspl.entity.GroupLessons;
-import skgspl.entity.GroupLessons_;
 import skgspl.entity.Group_;
 import skgspl.entity.Lesson;
 import skgspl.entity.Lesson_;
@@ -82,7 +83,7 @@ public class LessonDaoImpl extends SearchableDaoImpl<LessonSearchParams, Lesson>
 	public List<Lesson> getLessonsByGroupId(Long idGroup) {
 		List<Lesson> result = searchWithAnotherFilter(null, null, -1, 0, true, (root, builder, query) -> {
 			if (idGroup != null) {
-				query.where(builder.equal(root.join(Lesson_.groups).get(Group_.id),idGroup));
+				query.where(builder.equal(root.join(Lesson_.group).get(Group_.id),idGroup));
 				
 				}
 		});
@@ -91,14 +92,35 @@ public class LessonDaoImpl extends SearchableDaoImpl<LessonSearchParams, Lesson>
 
 	@Override
 	public List<Lesson> getLessonsWithoutGroup(Long idGroup) {
-		List<Lesson> result = searchWithAnotherFilter(null, null, -1, 0, true, (root, builder, query) -> {
-			Subquery<Long> subQuery = query.subquery(Long.class);
-			Root<GroupLessons> subRoot = subQuery.from(GroupLessons.class);
-			query.where(builder.not(root.get(Lesson_.id).in(subQuery.select(subRoot.get(GroupLessons_.lesson)).where(builder.equal(subRoot.get(GroupLessons_.lesson), idGroup)))));
-		
-		//	query.where(builder.isNull(root.get(Lesson_.Subject)));
-		});
-		return result;
+//		List<Lesson> result = searchWithAnotherFilter(null, null, -1, 0, true, (root, builder, query) -> {
+//			Subquery<Long> subQuery = query.subquery(Long.class);
+//			Root<GroupLessons> subRoot = subQuery.from(GroupLessons.class);
+//			query.where(builder.not(root.get(Lesson_.id).in(subQuery.select(subRoot.get(GroupLessons_.lesson)).where(builder.equal(subRoot.get(GroupLessons_.lesson), idGroup)))));
+//		
+//		//	query.where(builder.isNull(root.get(Lesson_.Subject)));
+//		});
+//		return result;
+		return null;
+	}
+
+	@Override
+	public List<Lesson> getTimetableByWeek(LocalDateTime day, Long idGroup) {
+		Session session = getSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Lesson> query = builder.createQuery(Lesson.class);
+		Root<Lesson> root = query.from(Lesson.class);
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		if (idGroup != null) {
+			predicates.add(builder.equal(root.join(Lesson_.group).get(Group_.id), idGroup));
+		}
+		if (day != null) {
+			predicates.add(builder.and(builder.greaterThan(root.get(Lesson_.date), day),
+					builder.lessThan(root.get(Lesson_.date), day.plusDays(7))));
+		}
+//		query.where(predicates.toArray(new Predicate[predicates.size()])).orderBy(builder.asc(root.get(Lesson_.date)),
+//				builder.asc(root.join(Lesson_.time).get(PairTime_.startTime)));
+		TypedQuery<Lesson> result = session.createQuery(query);
+		return result.getResultList();
 	}
 
 }

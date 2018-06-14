@@ -28,9 +28,6 @@ public class User extends AbstractEntity {
 	@Enumerated(value = EnumType.STRING)
 	protected RoleEnum role;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Group group;
-
 	@Column(name = "login")
 	protected String login;
 
@@ -72,11 +69,4 @@ public class User extends AbstractEntity {
 		this.details = details;
 	}
 
-	public Group getGroup() {
-		return group;
-	}
-
-	public void setGroup(Group group) {
-		this.group = group;
-	}
 }

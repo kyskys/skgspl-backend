@@ -16,22 +16,22 @@ import org.springframework.web.servlet.ModelAndView;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-	private static Logger logger = LogManager.getLogger(GlobalExceptionHandler.class);
-
-	@ResponseStatus(reason = "No entities found for this request", code = HttpStatus.NOT_FOUND)
-	@ExceptionHandler(NoResultException.class)
-	public void handleNoResultException() {
-
-	}
-
-	@ExceptionHandler(value = Exception.class)
-	public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
-		logger.error(e);
-		if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null) {
-			throw e;
-		}
-		ModelAndView mav = new ModelAndView();
-		mav.addObject("url", req.getRequestURL());
-		return mav;
-	}
+//	private static Logger logger = LogManager.getLogger(GlobalExceptionHandler.class);
+//
+//	@ResponseStatus(reason = "No entities found for this request", code = HttpStatus.NOT_FOUND)
+//	@ExceptionHandler(NoResultException.class)
+//	public void handleNoResultException() {
+//
+//	}
+//
+//	@ExceptionHandler(value = Exception.class)
+//	public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
+//		logger.error(e);
+//		if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null) {
+//			throw e;
+//		}
+//		ModelAndView mav = new ModelAndView();
+//		mav.addObject("url", req.getRequestURL());
+//		return mav;
+//	}
 }

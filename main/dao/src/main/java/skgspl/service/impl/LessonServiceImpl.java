@@ -1,5 +1,6 @@
 package skgspl.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,36 +19,43 @@ import skgspl.service.api.LessonService;
 public class LessonServiceImpl extends SearchableServiceImpl<LessonSearchParams, Lesson> implements LessonService {
 
 	@Autowired
-	LessonDao LessonDao;
+	LessonDao lessonDao;
 
 	@Override
 	protected AbstractDao<Lesson> getDao() {
-		return LessonDao;
+		return lessonDao;
 	}
 
 	@Override
 	protected Searchable<LessonSearchParams, Lesson> getSearchableDao() {
-		return LessonDao;
+		return lessonDao;
+	}
+
+	@Override
+	public List<Lesson> getLessonsByWeek(LocalDateTime day, Long idGroup) {
+		List<Lesson> result = lessonDao.getTimetableByWeek(day,idGroup);
+		result.stream().forEach(entity -> entity.getLocations().size());
+		return result;
 	}
 
 //	@Override
 //	public void addPairToLesson(Long idPair, Long idLesson) {
-//		LessonDao.addPairToLesson(idPair, idLesson);
+//		lessonDao.addPairToLesson(idPair, idLesson);
 //	}
 //
 //	@Override
 //	public void removePairFromLesson(Long idLesson) {
-//		LessonDao.removePairFromLesson(idLesson);
+//		lessonDao.removePairFromLesson(idLesson);
 //	}
 //
 //	@Override
 //	public List<Lesson> getLessonsByCourseId(Long idCourse) {
-//		return LessonDao.getLessonsByCourseId(idCourse);
+//		return lessonDao.getLessonsByCourseId(idCourse);
 //	}
 //
 //	@Override
 //	public List<Lesson> getLessonsWithoutCourse() {
-//		return LessonDao.getLessonsWithoutCourse();
+//		return lessonDao.getLessonsWithoutCourse();
 	}
 
 

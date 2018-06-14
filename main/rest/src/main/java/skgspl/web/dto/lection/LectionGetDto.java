@@ -13,7 +13,7 @@ public class LectionGetDto {
 
 	public LectionGetDto(Lesson lection) {
 		this.id = lection.getId();
-		this.name = lection.getName();
+		//this.name = lection.getName();
 		if (lection.getSubject() != null) {
 			this.course = lection.getSubject().getName();
 		}

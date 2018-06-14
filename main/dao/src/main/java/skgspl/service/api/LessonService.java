@@ -1,5 +1,6 @@
 package skgspl.service.api;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,4 +19,5 @@ public interface LessonService extends AbstractService<Lesson>, Searchable<Lesso
 //
 //	Collection<Lesson> getLectionsWithoutCourse();
 
+	List<Lesson> getLessonsByWeek(LocalDateTime day, Long idGroup);
 }

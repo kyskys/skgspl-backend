@@ -18,12 +18,11 @@ public class Group extends AbstractEntity {
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "group_students", joinColumns = @JoinColumn(name = "group_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-
 	private List<User> students;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "group_lessons", joinColumns = @JoinColumn(name = "group_id"), inverseJoinColumns = @JoinColumn(name = "lesson_id"))
-	private List<Lesson> lessons;
+//	@ManyToMany(fetch = FetchType.LAZY)
+//	@JoinTable(name = "group_lessons", joinColumns = @JoinColumn(name = "group_id"), inverseJoinColumns = @JoinColumn(name = "lesson_id"))
+//	private List<Lesson> lessons;
 
 	@ManyToOne
 	@JoinColumn(name="curator_id")
@@ -40,13 +39,13 @@ public class Group extends AbstractEntity {
 		this.students = students;
 	}
 
-	public List<Lesson> getLessons() {
-		return lessons;
-	}
-
-	public void setLessons(List<Lesson> lessons) {
-		this.lessons = lessons;
-	}
+//	public List<Lesson> getLessons() {
+//		return lessons;
+//	}
+//
+//	public void setLessons(List<Lesson> lessons) {
+//		this.lessons = lessons;
+//	}
 
 	public String getName() {
 		return name;

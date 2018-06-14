@@ -43,7 +43,7 @@ public class GroupServiceImpl extends SearchableServiceImpl<GroupSearchParams, G
 	public void addLessonToGroup(Long idLesson, Long idGroup) {
 		Group group = groupDao.get(idGroup);
 		Lesson lesson = lessonDao.get(idLesson);
-		group.getLessons().add(lesson);
+		//group.getLessons().add(lesson);
 		groupDao.update(group);
 	}
 
@@ -51,7 +51,7 @@ public class GroupServiceImpl extends SearchableServiceImpl<GroupSearchParams, G
 	public void removeLessonFromGroup(Long idLesson, Long idGroup) {
 		Group group = groupDao.get(idGroup);
 		Lesson lesson = lessonDao.get(idLesson);
-		group.getLessons().remove(lesson);
+		//group.getLessons().remove(lesson);
 		groupDao.update(group);
 	}
 
@@ -59,14 +59,14 @@ public class GroupServiceImpl extends SearchableServiceImpl<GroupSearchParams, G
 	public void addStudentToGroup(Long idStudent, Long idGroup) {
 		Group group = groupDao.get(idGroup);
 		User student = userDao.get(idStudent);
-		student.setGroup(group);
+		//student.setGroup(group);
 		userDao.update(student);
 	}
 
 	@Override
 	public void removeStudentFromGroup(Long idStudent) {
 		User student = userDao.get(idStudent);
-		student.setGroup(null);
+		//student.setGroup(null);
 		userDao.update(student);
 	}
 
@@ -80,13 +80,13 @@ public class GroupServiceImpl extends SearchableServiceImpl<GroupSearchParams, G
 				groupStudents.remove(idStudent);
 			} else {
 				User student = userDao.get(idStudent);
-				student.setGroup(group);
+				//student.setGroup(group);
 				userDao.update(student);
 			}
 		}
 		for (Long idStudent : groupStudents) {
 			User student = userDao.get(idStudent);
-			student.setGroup(null);
+			//student.setGroup(null);
 			userDao.update(student);
 		}
 	}

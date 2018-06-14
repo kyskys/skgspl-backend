@@ -12,9 +12,9 @@ public class SubjectLectionDto {
 
 	public SubjectLectionDto(Lesson lection) {
 		this.id = lection.getId();
-		if (lection.getName() != null) {
-			this.name = lection.getName();
-		}
+//		if (lection.getName() != null) {
+//			this.name = lection.getName();
+//		}
 	}
 
 	public Long getId() {

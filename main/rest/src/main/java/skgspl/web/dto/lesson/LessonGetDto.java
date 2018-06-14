@@ -18,11 +18,10 @@ public class LessonGetDto {
 
 	public LessonGetDto(Lesson lesson) {
 		this.id = lesson.getId();
-		this.name = lesson.getName();
+		//this.name = lesson.getName();
 		this.date = DateFormatterUtil.getDateAsString(lesson.getDate());
 		this.subject = lesson.getSubject().getName();
 		this.time = lesson.getTime().getTime();
-		this.lecturer = lesson.getLecturer().getId();
 	}
 
 	public Long getId() {

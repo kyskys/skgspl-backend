@@ -20,7 +20,7 @@
 	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
 	<context:annotation-config />
 	
-	<context:component-scan base-package="skgspl.web.impl.controller" />
+	<context:component-scan base-package="skgspl.web.controller" />
 	<context:component-scan base-package="skgspl.handler" />
 	
 	<bean id="currentUserHolder" class="skgspl.holder.user.CurrentUserHolder"

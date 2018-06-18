@@ -39,7 +39,7 @@ public class LessonDaoImpl extends SearchableDaoImpl<LessonSearchParams, Lesson>
 	@Override
 	protected void initSortMap() {
 		sortMap.put(SortParam.ID, Lesson_.id);
-		sortMap.put(SortParam.NAME, Lesson_.name);
+		//sortMap.put(SortParam.NAME, Lesson_.name);
 		sortMap.put(SortParam.SUBJECT_ID, Lesson_.subject);
 	}
 
@@ -67,9 +67,9 @@ public class LessonDaoImpl extends SearchableDaoImpl<LessonSearchParams, Lesson>
 		if (searchParam.getId() != null) {
 			predicates.add(builder.equal(root.get(Lesson_.id), searchParam.getId()));
 		}
-		if (searchParam.getName() != null) {
-			predicates.add(builder.like(root.get(Lesson_.name), like(searchParam.getName())));
-		}
+//		if (searchParam.getName() != null) {
+//			predicates.add(builder.like(root.get(Lesson_.name), like(searchParam.getName())));
+//		}
 //		if (searchParam.getGroup() != null) {
 //			predicates.add(builder.like(root.join(GroupLessons_.group).get(Group_.name), like(searchParam.getGroup())));
 //		}
@@ -104,7 +104,7 @@ public class LessonDaoImpl extends SearchableDaoImpl<LessonSearchParams, Lesson>
 	}
 
 	@Override
-	public List<Lesson> getTimetableByWeek(LocalDateTime day, Long idGroup) {
+	public List<Lesson> getLessonsByWeek(LocalDateTime day, Long idGroup) {
 		Session session = getSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Lesson> query = builder.createQuery(Lesson.class);
@@ -114,10 +114,10 @@ public class LessonDaoImpl extends SearchableDaoImpl<LessonSearchParams, Lesson>
 			predicates.add(builder.equal(root.join(Lesson_.group).get(Group_.id), idGroup));
 		}
 		if (day != null) {
-			predicates.add(builder.and(builder.greaterThan(root.get(Lesson_.date), day),
-					builder.lessThan(root.get(Lesson_.date), day.plusDays(7))));
+			predicates.add(builder.and(builder.greaterThanOrEqualTo(root.get(Lesson_.date), day),
+					builder.lessThanOrEqualTo(root.get(Lesson_.date), day.plusDays(7))));
 		}
-//		query.where(predicates.toArray(new Predicate[predicates.size()])).orderBy(builder.asc(root.get(Lesson_.date)),
+		query.where(predicates.toArray(new Predicate[predicates.size()]));//.orderBy(builder.asc(root.get(Lesson_.date)),
 //				builder.asc(root.join(Lesson_.time).get(PairTime_.startTime)));
 		TypedQuery<Lesson> result = session.createQuery(query);
 		return result.getResultList();

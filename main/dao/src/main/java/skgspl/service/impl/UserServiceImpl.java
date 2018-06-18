@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import skgspl.dao.api.AbstractDao;
 import skgspl.dao.api.UserDao;
-import skgspl.dao.util.CodeEnum;
+import skgspl.dto.util.CodeEnum;
 import skgspl.entity.User;
 import skgspl.entity.util.DictionaryItem;
 import skgspl.service.api.UserService;

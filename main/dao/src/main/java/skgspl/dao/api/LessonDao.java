@@ -17,6 +17,7 @@ public interface LessonDao extends AbstractDao<Lesson>, Searchable<LessonSearchP
 
 	List<Lesson> getLessonsWithoutGroup(Long idGroup);
 
-	List<Lesson> getTimetableByWeek(LocalDateTime day, Long idGroup);
+	List<Lesson> getLessonsByWeek(LocalDateTime day, Long idGroup);
 
+	
 }

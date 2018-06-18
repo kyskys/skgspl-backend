@@ -7,6 +7,8 @@ import java.util.List;
 import skgspl.dao.search.LectionSearchParams;
 import skgspl.dao.search.LessonSearchParams;
 import skgspl.dao.search.Searchable;
+import skgspl.dto.lesson.LessonLocationGetDto;
+import skgspl.dto.lesson.LessonTimetableGetDto;
 import skgspl.entity.Lesson;
 
 public interface LessonService extends AbstractService<Lesson>, Searchable<LessonSearchParams, Lesson> {
@@ -20,4 +22,10 @@ public interface LessonService extends AbstractService<Lesson>, Searchable<Lesso
 //	Collection<Lesson> getLectionsWithoutCourse();
 
 	List<Lesson> getLessonsByWeek(LocalDateTime day, Long idGroup);
+
+	void updateLessonByDto(Lesson lesson, LessonTimetableGetDto dto);
+
+	void updateTimetable(LocalDateTime firstDay, Long idGroup, List<LessonTimetableGetDto> receivedLessons);
+
+	//void updateTimetable(List<LessonTimetableGetDto> data, Long idGroup);
 }

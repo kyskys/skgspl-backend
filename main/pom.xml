@@ -68,5 +68,6 @@
   	<module>dao</module>
   	<module>rest</module>
     <module>holder</module>
+    <module>dto</module>
   </modules>
 </project>

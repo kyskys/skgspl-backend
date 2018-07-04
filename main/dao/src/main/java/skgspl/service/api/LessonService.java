@@ -9,6 +9,7 @@ import skgspl.dao.search.LessonSearchParams;
 import skgspl.dao.search.Searchable;
 import skgspl.dto.lesson.LessonLocationGetDto;
 import skgspl.dto.lesson.LessonTimetableGetDto;
+import skgspl.dto.report.TimetableReportItem;
 import skgspl.entity.Lesson;
 
 public interface LessonService extends AbstractService<Lesson>, Searchable<LessonSearchParams, Lesson> {
@@ -26,6 +27,8 @@ public interface LessonService extends AbstractService<Lesson>, Searchable<Lesso
 	void updateLessonByDto(Lesson lesson, LessonTimetableGetDto dto);
 
 	void updateTimetable(LocalDateTime firstDay, Long idGroup, List<LessonTimetableGetDto> receivedLessons);
+	
+	List<TimetableReportItem> getTimetableReportData(LocalDateTime firstDay);
 
 	//void updateTimetable(List<LessonTimetableGetDto> data, Long idGroup);
 }

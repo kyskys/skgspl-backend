@@ -2,9 +2,12 @@ package skgspl.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +23,11 @@ import skgspl.dao.api.SubjectDao;
 import skgspl.dao.api.UserDao;
 import skgspl.dao.search.LessonSearchParams;
 import skgspl.dao.search.Searchable;
+import skgspl.dao.util.DaoUtils;
 import skgspl.dto.lesson.LessonTimetableGetDto;
+import skgspl.dto.report.TimetableReportItem;
+import skgspl.dto.report.TimetableSubreportItem;
+import skgspl.entity.Group;
 import skgspl.entity.Lesson;
 import skgspl.entity.LessonLocation;
 import skgspl.service.api.LessonService;
@@ -64,8 +71,7 @@ public class LessonServiceImpl extends SearchableServiceImpl<LessonSearchParams,
 	@Override
 	public void updateTimetable(LocalDateTime firstDay, Long idGroup, List<LessonTimetableGetDto> receivedLessons) {
 		List<Lesson> storedLessons = lessonDao.getLessonsByWeek(firstDay, idGroup);
-		List<Lesson> neww = new ArrayList<Lesson>();
-		neww = storedLessons.stream().filter(storedLesson -> {
+		storedLessons.stream().filter(storedLesson -> {
 			boolean isToDelete = true;
 			for (Iterator<LessonTimetableGetDto> iterator = receivedLessons.iterator(); iterator.hasNext();) {
 				LessonTimetableGetDto receivedLesson = iterator.next();
@@ -79,8 +85,7 @@ public class LessonServiceImpl extends SearchableServiceImpl<LessonSearchParams,
 				}
 			}
 			return isToDelete;
-		}).collect(Collectors.toList());
-		neww.forEach(lesson -> {
+		}).forEach(lesson -> {
 			lessonDao.delete(lesson);
 		});
 		receivedLessons.forEach(lessonToCreate -> {
@@ -97,20 +102,40 @@ public class LessonServiceImpl extends SearchableServiceImpl<LessonSearchParams,
 	@Override
 	public void updateLessonByDto(Lesson lesson, LessonTimetableGetDto dto) {
 		lesson.setSubject(subjectDao.get(dto.getSubject()));
-		if (lesson.getLocations() != null) {
-			lesson.getLocations().forEach(location -> {
-				lessonLocationDao.delete(location);
-			});
+		lesson.getLocations().forEach(location -> {
+			lessonLocationDao.delete(location);
+		});
+
+		dto.getLocations().forEach(location -> {
+			LessonLocation newLocation = new LessonLocation();
+			newLocation.setLecturer(userDao.get(location.getLecturer()));
+			newLocation.setRoom(roomDao.get(location.getRoom()));
+			newLocation.setLesson(lesson);
+			lessonLocationDao.create(newLocation);
+		});
+
+	}
+
+	@Override
+	public List<TimetableReportItem> getTimetableReportData(LocalDateTime firstDay) {
+		List<TimetableReportItem> result = new ArrayList<TimetableReportItem>();
+		List<Group> groups = groupDao.getAll();
+		for (int i = 0, j = 1; i <= groups.size(); i+=2, j+=2) {
+			TimetableReportItem dataRow = new TimetableReportItem();
+			
+			dataRow.setFirstGroupData(DaoUtils.getEmptyTimetable());
+			dataRow.setSecondGroupData(DaoUtils.getEmptyTimetable());
+			Group firstGroup = groups.get(i);
+			dataRow.setFirstGroupName(firstGroup.getName());
+			DaoUtils.fillTimetable(dataRow.getFirstGroupData(), getLessonsByWeek(firstDay, firstGroup.getId()));
+			if(j<=groups.size()) {
+				Group secondGroup = groups.get(i);
+				DaoUtils.fillTimetable(dataRow.getFirstGroupData(), getLessonsByWeek(firstDay, secondGroup.getId()));
+				dataRow.setSecondGroupName(secondGroup.getName());
+			}
+			result.add(dataRow);
 		}
-		if (dto.getLocations() != null) {
-			dto.getLocations().forEach(location -> {
-				LessonLocation newLocation = new LessonLocation();
-				newLocation.setLecturer(userDao.get(location.getLecturer()));
-				newLocation.setRoom(roomDao.get(location.getRoom()));
-				newLocation.setLesson(lesson);
-				lessonLocationDao.create(newLocation);
-			});
-		}
+		return result;
 	}
 
 	// @Override

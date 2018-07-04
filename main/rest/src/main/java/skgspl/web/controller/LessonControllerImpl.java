@@ -1,14 +1,16 @@
 package skgspl.web.controller;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,18 +18,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import antlr.debug.NewLineEvent;
-import skgspl.dao.search.LessonSearchParams;
+import net.sf.jasperreports.engine.JRException;
 import skgspl.dao.search.SortParam;
 import skgspl.dto.lesson.LessonCreateDto;
 import skgspl.dto.lesson.LessonGetDto;
 import skgspl.dto.lesson.LessonTimetableGetDto;
 import skgspl.dto.lesson.LessonUpdateDto;
+import skgspl.dto.report.TimetableReportItem;
 import skgspl.dto.util.DateFormatterUtil;
 import skgspl.entity.Lesson;
-import skgspl.entity.LessonLocation;
 import skgspl.entity.util.DictionaryItem;
-import skgspl.holder.support.CurrentUserSupport;
+import skgspl.reports.builder.JasperReportBuilder;
+import skgspl.reports.format.ReportFormat;
 import skgspl.service.api.GroupService;
 import skgspl.service.api.LessonLocationService;
 import skgspl.service.api.LessonService;
@@ -154,7 +156,31 @@ public class LessonControllerImpl {
 		LocalDateTime firstDay = DateFormatterUtil.getDateFromString(startOfWeek);
 		lessonService.updateTimetable(firstDay, idGroup, receivedLessons);
 	}
-
+	
+	@RequestMapping(value = "timetable/report", method = RequestMethod.GET)
+	public void getTimetableReport(@RequestParam("day") String startOfWeek) {
+		LocalDateTime firstDay = DateFormatterUtil.getDateFromString(startOfWeek);
+		List<TimetableReportItem> report = lessonService.getTimetableReportData(firstDay);
+		JasperReportBuilder builder = new JasperReportBuilder();
+		try (FileOutputStream fos = new FileOutputStream("D://report.pdf")) {
+			// Writer writer = new ByteWriter(new FileWriter("report.pdf"));
+			Map<String, Object> map = new HashMap<>();
+			map.put("firstDay","07.01");
+			map.put("lastDay", "10.01");
+			map.put("year", "2018");
+			map.put("profPresident","А.А. Предко");
+			map.put("director", "В.Н. Салей");
+			byte[] bytes = builder.buildReportWithObjects(JasperReportBuilder.ReportTemplate.REPORT_TEMPLATE,
+					ReportFormat.PDF, map, report);
+			fos.write(bytes);
+		} catch (JRException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 //	@RequestMapping(value = "{id}/add/group", method = RequestMethod.POST)
 //	public void addGroupsToLesson(@PathVariable("id") Long idLesson, @RequestBody List<Long> groups) {
 //		lessonService.addGroupsToLesson(idLesson, groups);

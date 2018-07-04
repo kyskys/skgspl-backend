@@ -2,6 +2,7 @@ package skgspl.dto.lesson;
 
 import skgspl.entity.Lesson;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,7 @@ public class LessonTimetableGetDto {
 		this.date = lesson.getDate().getDayOfWeek().getValue();
 		this.subject = lesson.getSubject().getId();
 		this.time = lesson.getTime().getId();
-		this.locations=lesson.getLocations().stream().map(LessonLocationGetDto::new).collect(Collectors.toList());
+		this.locations = lesson.getLocations().stream().map(LessonLocationGetDto::new).collect(Collectors.toList());
 	}
 
 	public Integer getDate() {
@@ -39,7 +40,8 @@ public class LessonTimetableGetDto {
 	}
 
 	public List<LessonLocationGetDto> getLocations() {
-		return locations;
+		return locations != null ? new ArrayList<LessonLocationGetDto>(locations)
+				: new ArrayList<LessonLocationGetDto>();
 	}
 
 	public void setLocations(List<LessonLocationGetDto> locations) {

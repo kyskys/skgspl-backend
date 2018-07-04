@@ -69,5 +69,6 @@
   	<module>rest</module>
     <module>holder</module>
     <module>dto</module>
+    <module>reports</module>
   </modules>
 </project>

@@ -1,13 +1,13 @@
 package skgspl.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -22,15 +22,15 @@ public class Lesson extends AbstractEntity {
 	private Subject subject;
 
 	@OneToOne
-	@JoinColumn(name="group_id")
+	@JoinColumn(name = "group_id")
 	private Group group;
 
 	@Column(name = "date")
 	private LocalDateTime date;
-	
-	@OneToMany(mappedBy="lesson", fetch = FetchType.LAZY)
+
+	@OneToMany(mappedBy = "lesson", fetch = FetchType.LAZY)
 	private List<LessonLocation> locations;
-	
+
 	@OneToOne
 	@JoinColumn(name = "time_id")
 	private LessonTime time;
@@ -43,13 +43,13 @@ public class Lesson extends AbstractEntity {
 		this.subject = subject;
 	}
 
-//	public String getName() {
-//		return name;
-//	}
-//
-//	public void setName(String name) {
-//		this.name = name;
-//	}
+	// public String getName() {
+	// return name;
+	// }
+	//
+	// public void setName(String name) {
+	// this.name = name;
+	// }
 
 	public Group getGroup() {
 		return group;
@@ -68,7 +68,7 @@ public class Lesson extends AbstractEntity {
 	}
 
 	public List<LessonLocation> getLocations() {
-		return locations;
+		return locations != null ? new ArrayList<LessonLocation>(locations) : new ArrayList<LessonLocation>();
 	}
 
 	public void setLocations(List<LessonLocation> locations) {
@@ -82,6 +82,5 @@ public class Lesson extends AbstractEntity {
 	public void setTime(LessonTime time) {
 		this.time = time;
 	}
-
 
 }

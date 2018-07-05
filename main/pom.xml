@@ -70,5 +70,6 @@
     <module>holder</module>
     <module>dto</module>
     <module>reports</module>
+    <module>font</module>
   </modules>
 </project>

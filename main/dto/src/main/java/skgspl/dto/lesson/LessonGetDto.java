@@ -1,6 +1,7 @@
 package skgspl.dto.lesson;
 
 import skgspl.dto.util.DateFormatterUtil;
+import skgspl.dto.util.DateFormatterUtil.FormatEnum;
 import skgspl.entity.Lesson;
 
 public class LessonGetDto {
@@ -18,7 +19,7 @@ public class LessonGetDto {
 	public LessonGetDto(Lesson lesson) {
 		this.id = lesson.getId();
 		//this.name = lesson.getName();
-		this.date = DateFormatterUtil.getDateAsString(lesson.getDate());
+		this.date = DateFormatterUtil.getDateAsString(lesson.getDate(),FormatEnum.DATE_FORMATTER);
 		this.subject = lesson.getSubject().getName();
 		this.time = lesson.getTime().getTime();
 	}

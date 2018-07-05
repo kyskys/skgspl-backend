@@ -12,10 +12,12 @@ public class DaoUtils {
 		return IntStream.range(0, 20).mapToObj(i -> new TimetableSubreportItem()).collect(Collectors.toList());
 	}
 
-	public static void fillTimetable(List<TimetableSubreportItem> source, List<Lesson> lessons) {
+	public static List<TimetableSubreportItem> fillTimetable(List<TimetableSubreportItem> source, List<Lesson> lessons) {
 		lessons.forEach(lesson -> {
-			source.set(lesson.getDate().getDayOfWeek().getValue() * 4 + lesson.getTime().getId().intValue(),
-					new TimetableSubreportItem(lesson));
+			int index = (lesson.getDate().getDayOfWeek().getValue() - 1)  * 4 + lesson.getTime().getId().intValue() - 1;
+			TimetableSubreportItem item = new TimetableSubreportItem(lesson);
+			source.set(index, item);
 		});
+		return source;
 	}
 }

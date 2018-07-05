@@ -1,6 +1,7 @@
 package skgspl.dto;
 
 import skgspl.dto.util.DateFormatterUtil;
+import skgspl.dto.util.DateFormatterUtil.FormatEnum;
 import skgspl.entity.Lesson;
 
 public class LessonTimeItemDto {
@@ -19,7 +20,7 @@ public class LessonTimeItemDto {
 		//this.lection = lesson.getLection().getName();
 		//this.startTime = DateFormatterUtil.getTimeAsString(lesson.getTime().getStartTime());
 		//this.endTime = DateFormatterUtil.getTimeAsString(lesson.getTime().getEndTime());
-		this.date = DateFormatterUtil.getDateAsString(lesson.getDate());
+		this.date = DateFormatterUtil.getDateAsString(lesson.getDate(),FormatEnum.DATE_FORMATTER);
 	}
 
 	public String getName() {

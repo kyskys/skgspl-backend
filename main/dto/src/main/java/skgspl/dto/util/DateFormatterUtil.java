@@ -6,22 +6,34 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class DateFormatterUtil {
-	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
-	public static String getDateAsString(LocalDateTime date) {
-		return date.format(DATE_FORMATTER);
+	public enum FormatEnum {
+		DATE_FORMATTER("dd/MM/yyyy"), TIME_FORMATTER("HH:mm"), DAY_TO_PRINT_FORMATTER("dd.MM");
+
+		private DateTimeFormatter formatter;
+
+		FormatEnum(String pattern) {
+			this.formatter = DateTimeFormatter.ofPattern(pattern);
+		}
+
+		DateTimeFormatter getFormatter() {
+			return formatter;
+		}
 	}
 
-	public static LocalDateTime getDateFromString(String date) {
-		return date != null ? LocalDateTime.of(LocalDate.parse(date, DATE_FORMATTER),LocalTime.of(3, 0)) : null;
+	public static String getDateAsString(LocalDateTime date, FormatEnum format) {
+		return date.format(format.getFormatter());
 	}
 
-	public static String getTimeAsString(LocalTime time) {
-		return time.format(TIME_FORMATTER);
+	public static LocalDateTime getDateFromString(String date, FormatEnum format) {
+		return date != null ? LocalDateTime.of(LocalDate.parse(date, format.getFormatter()), LocalTime.of(3, 0)) : null;
 	}
 
-	public static LocalTime getTimeFromString(String time) {
-		return time != null ? LocalTime.parse(time, TIME_FORMATTER) : null;
+	public static String getTimeAsString(LocalTime time, FormatEnum format) {
+		return time.format(format.getFormatter());
+	}
+
+	public static LocalTime getTimeFromString(String time, FormatEnum format) {
+		return time != null ? LocalTime.parse(time, format.getFormatter()) : null;
 	}
 }

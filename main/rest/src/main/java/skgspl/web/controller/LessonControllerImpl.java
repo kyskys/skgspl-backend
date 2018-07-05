@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,8 +58,9 @@ public class LessonControllerImpl {
 	@Autowired
 	RoomService roomService;
 
-	@RequestMapping(value = "{id}/", method = RequestMethod.GET, produces = "application/json")
+	private static final DateFormatter DAY_TO_PRINT_FORMAT = new DateFormatter("dd.MM");
 
+	@RequestMapping(value = "{id}/", method = RequestMethod.GET, produces = "application/json")
 	public LessonGetDto getLesson(@PathVariable("id") Long id) {
 		return new LessonGetDto(lessonService.get(id));
 	}
@@ -66,7 +68,7 @@ public class LessonControllerImpl {
 	@RequestMapping(method = RequestMethod.PUT)
 	public LessonGetDto createLesson(@Valid @RequestBody LessonCreateDto dto) {
 		Lesson lesson = new Lesson();
-		lesson.setDate(DateFormatterUtil.getDateFromString(dto.getDate()));
+		lesson.setDate(DateFormatterUtil.getDateFromString(dto.getDate(), DateFormatterUtil.FormatEnum.DATE_FORMATTER));
 		lesson.setSubject(subjectService.get(dto.getSubject()));
 		lesson.setTime(lessonTimeService.get(dto.getTime()));
 		return new LessonGetDto(lessonService.create(lesson));
@@ -83,24 +85,25 @@ public class LessonControllerImpl {
 
 	public void updateLesson(@Valid @RequestBody LessonUpdateDto dto, @PathVariable("id") Long id) {
 		Lesson lesson = lessonService.get(id);
-		LocalDateTime date = DateFormatterUtil.getDateFromString(dto.getDate());
+		LocalDateTime date = DateFormatterUtil.getDateFromString(dto.getDate(),
+				DateFormatterUtil.FormatEnum.DATE_FORMATTER);
 		lesson.setDate(date);
 		Long idLection = dto.getLection();
 		if (idLection != null && idLection != 0) {
-			//lesson.setLection(lessonService.get(idLection));
+			// lesson.setLection(lessonService.get(idLection));
 		}
 		Long idLessonTime = dto.getTime();
 		if (idLessonTime != null && idLessonTime != 0) {
 			lesson.setTime(lessonTimeService.get(idLessonTime));
 		}
 		String name = dto.getName();
-//		if (!StringUtils.isEmpty(name)) {
-//			lesson.setName(name);
-//		}
+		// if (!StringUtils.isEmpty(name)) {
+		// lesson.setName(name);
+		// }
 		lessonService.update(lesson);
 	}
 
-	@RequestMapping(value="all", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "all", method = RequestMethod.GET, produces = "application/json")
 	public List<LessonGetDto> getAllLessons() {
 		return lessonService.getAll().stream().map(LessonGetDto::new).collect(Collectors.toList());
 	}
@@ -112,12 +115,14 @@ public class LessonControllerImpl {
 			@RequestParam(value = "date", required = false) String date,
 			@RequestParam(value = "lection", required = false) String lection, @RequestParam("limit") Integer limit,
 			@RequestParam("offset") Integer offset, @RequestParam("asc") boolean asc) {
-//		LessonSearchParams searchParam = new LessonSearchParams(id, name, DateFormatterUtil.getDateFromString(date),
-//				lection);
+		// LessonSearchParams searchParam = new LessonSearchParams(id, name,
+		// DateFormatterUtil.getDateFromString(date),
+		// lection);
 		SortParam sortParam = SortParam.getValueOf(sortBy);
-//		List<LessonGetDto> result = lessonService.search(sortParam, searchParam, limit, offset, asc).stream()
-//				.map(LessonGetDto::new).collect(Collectors.toList());
-//		return result;
+		// List<LessonGetDto> result = lessonService.search(sortParam,
+		// searchParam, limit, offset, asc).stream()
+		// .map(LessonGetDto::new).collect(Collectors.toList());
+		// return result;
 		return null;
 	}
 
@@ -126,9 +131,10 @@ public class LessonControllerImpl {
 			@RequestParam(value = "id", required = false) String name,
 			@RequestParam(value = "date", required = false) String date,
 			@RequestParam(value = "lection", required = false) String lection) {
-//		LessonSearchParams searchParam = new LessonSearchParams(id, name, DateFormatterUtil.getDateFromString(date),
-//				lection);
-		//return lessonService.count(searchParam);
+		// LessonSearchParams searchParam = new LessonSearchParams(id, name,
+		// DateFormatterUtil.getDateFromString(date),
+		// lection);
+		// return lessonService.count(searchParam);
 		return null;
 	}
 
@@ -141,48 +147,62 @@ public class LessonControllerImpl {
 	public List<DictionaryItem> getLessonTimeDictionary() {
 		return lessonTimeService.getDictionary();
 	}
-	
+
 	@RequestMapping(value = "timetable/{group}", method = RequestMethod.GET)
 	public List<LessonTimetableGetDto> getTimetableByWeek(@RequestParam("day") String startOfWeek,
 			@PathVariable("group") Long idGroup) {
-		LocalDateTime day = DateFormatterUtil.getDateFromString(startOfWeek);
+		LocalDateTime day = DateFormatterUtil.getDateFromString(startOfWeek,
+				DateFormatterUtil.FormatEnum.DATE_FORMATTER);
 		return lessonService.getLessonsByWeek(day, idGroup).stream().map(LessonTimetableGetDto::new)
 				.collect(Collectors.toList());
 	}
-	
+
 	@RequestMapping(value = "timetable/{group}", method = RequestMethod.POST)
 	public void updateTimetable(@RequestBody List<LessonTimetableGetDto> receivedLessons,
-			@PathVariable("group") Long idGroup,@RequestParam("day") String startOfWeek) {
-		LocalDateTime firstDay = DateFormatterUtil.getDateFromString(startOfWeek);
+			@PathVariable("group") Long idGroup, @RequestParam("day") String startOfWeek) {
+		LocalDateTime firstDay = DateFormatterUtil.getDateFromString(startOfWeek,
+				DateFormatterUtil.FormatEnum.DATE_FORMATTER);
 		lessonService.updateTimetable(firstDay, idGroup, receivedLessons);
 	}
-	
+
 	@RequestMapping(value = "timetable/report", method = RequestMethod.GET)
-	public void getTimetableReport(@RequestParam("day") String startOfWeek) {
-		LocalDateTime firstDay = DateFormatterUtil.getDateFromString(startOfWeek);
+	public byte[] getTimetableReport(@RequestParam("day") String startOfWeek) {
+		LocalDateTime firstDay = DateFormatterUtil.getDateFromString(startOfWeek,
+				DateFormatterUtil.FormatEnum.DATE_FORMATTER);
+		LocalDateTime lastDay = firstDay.plusDays(6);
 		List<TimetableReportItem> report = lessonService.getTimetableReportData(firstDay);
 		JasperReportBuilder builder = new JasperReportBuilder();
-		try (FileOutputStream fos = new FileOutputStream("D://report.pdf")) {
-			// Writer writer = new ByteWriter(new FileWriter("report.pdf"));
+		//try (FileOutputStream fos = new FileOutputStream("D://report.pdf")) {
 			Map<String, Object> map = new HashMap<>();
-			map.put("firstDay","07.01");
-			map.put("lastDay", "10.01");
-			map.put("year", "2018");
-			map.put("profPresident","А.А. Предко");
+			map.put("firstDay",
+					DateFormatterUtil.getDateAsString(firstDay, DateFormatterUtil.FormatEnum.DAY_TO_PRINT_FORMATTER));
+			map.put("lastDay",
+					DateFormatterUtil.getDateAsString(lastDay, DateFormatterUtil.FormatEnum.DAY_TO_PRINT_FORMATTER));
+			map.put("year", firstDay.getYear() == lastDay.getYear() ? String.valueOf(firstDay.getYear())
+					: firstDay.getYear() + "-" + lastDay.getYear());
+			map.put("profPresident", "А.А. Предко");
 			map.put("director", "В.Н. Салей");
-			byte[] bytes = builder.buildReportWithObjects(JasperReportBuilder.ReportTemplate.REPORT_TEMPLATE,
-					ReportFormat.PDF, map, report);
-			fos.write(bytes);
-		} catch (JRException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			byte[] bytes;
+			try {
+				bytes = builder.buildReportWithObjects(JasperReportBuilder.ReportTemplate.REPORT_TEMPLATE,
+						ReportFormat.PDF, map, report);
+				return bytes;
+			} catch (JRException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+//		} catch (JRException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
-//	@RequestMapping(value = "{id}/add/group", method = RequestMethod.POST)
-//	public void addGroupsToLesson(@PathVariable("id") Long idLesson, @RequestBody List<Long> groups) {
-//		lessonService.addGroupsToLesson(idLesson, groups);
-//	}
+	// @RequestMapping(value = "{id}/add/group", method = RequestMethod.POST)
+	// public void addGroupsToLesson(@PathVariable("id") Long idLesson,
+	// @RequestBody List<Long> groups) {
+	// lessonService.addGroupsToLesson(idLesson, groups);
+	// }
 }

@@ -120,7 +120,6 @@ public class LessonDaoImpl extends SearchableDaoImpl<LessonSearchParams, Lesson>
 		query.where(predicates.toArray(new Predicate[predicates.size()]));//.orderBy(builder.asc(root.get(Lesson_.date)),
 //				builder.asc(root.join(Lesson_.time).get(PairTime_.startTime)));
 		TypedQuery<Lesson> result = session.createQuery(query);
-		List<Lesson> a = result.getResultList();
 		return result.getResultList();
 	}
 

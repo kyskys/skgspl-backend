@@ -122,15 +122,14 @@ public class LessonServiceImpl extends SearchableServiceImpl<LessonSearchParams,
 		List<Group> groups = groupDao.getAll();
 		for (int i = 0, j = 1; i <= groups.size(); i+=2, j+=2) {
 			TimetableReportItem dataRow = new TimetableReportItem();
-			
 			dataRow.setFirstGroupData(DaoUtils.getEmptyTimetable());
 			dataRow.setSecondGroupData(DaoUtils.getEmptyTimetable());
 			Group firstGroup = groups.get(i);
 			dataRow.setFirstGroupName(firstGroup.getName());
-			DaoUtils.fillTimetable(dataRow.getFirstGroupData(), getLessonsByWeek(firstDay, firstGroup.getId()));
-			if(j<=groups.size()) {
-				Group secondGroup = groups.get(i);
-				DaoUtils.fillTimetable(dataRow.getFirstGroupData(), getLessonsByWeek(firstDay, secondGroup.getId()));
+			dataRow.setFirstGroupData(DaoUtils.fillTimetable(dataRow.getFirstGroupData(), getLessonsByWeek(firstDay, firstGroup.getId())));
+			if(j<groups.size()) {
+				Group secondGroup = groups.get(j);
+				dataRow.setSecondGroupData(DaoUtils.fillTimetable(dataRow.getSecondGroupData(), getLessonsByWeek(firstDay, secondGroup.getId())));
 				dataRow.setSecondGroupName(secondGroup.getName());
 			}
 			result.add(dataRow);

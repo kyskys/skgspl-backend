@@ -19,11 +19,11 @@ public class UserPrivilegieFilter extends RequestContextFilter implements Curren
 	public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		String path = request.getServletPath();
-		if (PrivilegiesManager.checkPrivilegie(path.replaceAll("[0-9]+", "*"), getCurrentUser().getRole())) {
-			chain.doFilter(request, response);
-		} else {
-			response.setContentLength(0);
-			response.setStatus(STATUS_CODE_FORBIDDEN);
-		}
+//		if (PrivilegiesManager.checkPrivilegie(path.replaceAll("[0-9]+", "*"), getCurrentUser().getRole())) {
+//			chain.doFilter(request, response);
+//		} else {
+//			response.setContentLength(0);
+//			response.setStatus(STATUS_CODE_FORBIDDEN);
+//		}
 	}
 }

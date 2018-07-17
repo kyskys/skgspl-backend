@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.sf.jasperreports.engine.JRException;
+import skgspl.aspect.AuthorityCheck;
 import skgspl.dao.search.SortParam;
 import skgspl.dto.lesson.LessonCreateDto;
 import skgspl.dto.lesson.LessonGetDto;
@@ -60,6 +61,7 @@ public class LessonControllerImpl {
 
 	private static final DateFormatter DAY_TO_PRINT_FORMAT = new DateFormatter("dd.MM");
 
+	@AuthorityCheck(authorities={"DELETE_GROUP","CREATE_GROUP"})
 	@RequestMapping(value = "{id}/", method = RequestMethod.GET, produces = "application/json")
 	public LessonGetDto getLesson(@PathVariable("id") Long id) {
 		return new LessonGetDto(lessonService.get(id));
@@ -80,9 +82,8 @@ public class LessonControllerImpl {
 		lesson.setId(id);
 		lessonService.delete(lesson);
 	}
-
+	
 	@RequestMapping(value = "{id}", method = RequestMethod.POST)
-
 	public void updateLesson(@Valid @RequestBody LessonUpdateDto dto, @PathVariable("id") Long id) {
 		Lesson lesson = lessonService.get(id);
 		LocalDateTime date = DateFormatterUtil.getDateFromString(dto.getDate(),

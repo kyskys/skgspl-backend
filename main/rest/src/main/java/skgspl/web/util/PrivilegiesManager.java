@@ -11,11 +11,11 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import skgspl.entity.util.RoleEnum;
+import skgspl.entity.Role;
 import skgspl.handler.GlobalExceptionHandler;
 
 public class PrivilegiesManager {
-	static {
+	/*static {
 		privilegieMap = new HashMap<String, Set<RoleEnum>>();
 		loadMapForPath("privilegies.properties");
 	}
@@ -46,7 +46,7 @@ public class PrivilegiesManager {
 		}
 	}
 
-	public static boolean checkPrivilegie(String path, RoleEnum role) {
+	public static boolean checkPrivilegie(String path, Role role) {
 		Set<RoleEnum> roles = privilegieMap.get(path);
 		if (roles != null) {
 			return roles.contains(role);
@@ -54,5 +54,5 @@ public class PrivilegiesManager {
 		} else {
 			return true;
 		}
-	}
+	}*/
 }

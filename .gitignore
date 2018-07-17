@@ -23,3 +23,4 @@ hs_err_pid*
 RemoteSystemsTempFiles/.project
 report/jasperreports-fonts-1_0.jar
 main/reports/jasperreports-fonts-1_0.jar
+.recommenders/

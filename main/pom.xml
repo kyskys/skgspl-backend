@@ -71,5 +71,6 @@
     <module>dto</module>
     <module>reports</module>
     <module>font</module>
+    <module>aspect</module>
   </modules>
 </project>

@@ -22,6 +22,7 @@
 	
 	<context:component-scan base-package="skgspl.web.controller" />
 	<context:component-scan base-package="skgspl.handler" />
+	<context:component-scan base-package="skgspl.aspect" />
 	
 	<bean id="currentUserHolder" class="skgspl.holder.user.CurrentUserHolder"
 		scope="request" />

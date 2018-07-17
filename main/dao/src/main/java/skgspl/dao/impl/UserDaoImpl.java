@@ -15,7 +15,6 @@ import skgspl.entity.User;
 import skgspl.entity.UserDetails_;
 import skgspl.entity.User_;
 import skgspl.entity.util.DictionaryItem;
-import skgspl.entity.util.RoleEnum;
 
 @Repository
 public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
@@ -40,7 +39,7 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 	@Override
 	public List<DictionaryItem> getLecturerDictionary() {
 		return getDictionaryByCriteria((root,builder,query) -> {
-			query.multiselect(root.get(User_.id),root.join(User_.details).get(UserDetails_.name)).where(builder.equal(root.get(User_.role),(RoleEnum.LECTURER)));
+			//query.multiselect(root.get(User_.id),root.join(User_.details).get(UserDetails_.name)).where(builder.equal(root.get(User_.role),(RoleEnum.LECTURER)));
 		});
 	}
 

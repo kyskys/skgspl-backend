@@ -10,4 +10,8 @@ public interface UserDao extends AbstractDao<User> {
 	User getUserByLogin(String login);
 
 	List<DictionaryItem> getLecturerDictionary();
+
+	void updateUserRole(Long idUser, Long idRole);
+
+	List<DictionaryItem> getUserDictionary();
 }

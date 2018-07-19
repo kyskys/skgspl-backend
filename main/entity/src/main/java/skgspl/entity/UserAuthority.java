@@ -17,25 +17,25 @@ public class UserAuthority {
 
 	@Id
 	@Column(name = "user_id")
-	private User user;
+	private Long user;
 
 	@Id
 	@Column(name = "authority_id")
-	private Authority authority;
+	private Long authority;
 
-	public User getUser() {
+	public Long getUser() {
 		return user;
 	}
 
-	public void setRole(User user) {
+	public void setRole(Long user) {
 		this.user = user;
 	}
 
-	public Authority getAuthority() {
+	public Long getAuthority() {
 		return authority;
 	}
 
-	public void setAuthority(Authority authority) {
+	public void setAuthority(Long authority) {
 		this.authority = authority;
 	}
 }
@@ -43,8 +43,8 @@ public class UserAuthority {
 @Embeddable
 class UserAuthorityPK implements Serializable {
 
-	private static final long serialVersionUID = 8557696002432831729L;
-
+	private static final long serialVersionUID = -5864259564289972258L;
+	
 	private Long user;
 	private Long authority;
 

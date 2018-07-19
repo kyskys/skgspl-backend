@@ -124,10 +124,14 @@ public class AuthorityController {
 	}
 
 	@RequestMapping(value = "dictionary/role/{id}", method = RequestMethod.GET)
-	public List<DictionaryItem> getDictionaryByRole(@PathVariable("id") Long idAuthority) {
-		return authorityService.getDictionaryByRole(idAuthority);
+	public List<DictionaryItem> getDictionaryByRole(@PathVariable("id") Long idRole) {
+		return authorityService.getDictionaryByRole(idRole);
 	}
 
+	@RequestMapping(value = "dictionary/user/{id}", method = RequestMethod.GET)
+	public List<DictionaryItem> getDictionaryByUser(@PathVariable("id") Long idUser) {
+		return authorityService.getDictionaryByUser(idUser);
+	}
 	// @RequestMapping(value = "lesson/{lesson}", method = RequestMethod.GET)
 	// public List<AuthorityGetDto>
 	// getAuthoritysByLessonId(@PathVariable("pair") Long idPair) {

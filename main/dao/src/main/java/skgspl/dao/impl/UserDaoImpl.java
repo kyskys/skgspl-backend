@@ -1,7 +1,9 @@
 package skgspl.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -19,6 +21,10 @@ import skgspl.entity.util.DictionaryItem;
 @Repository
 public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 
+	private static final String UPDATE_USER_ROLE_QUERY = "update User set role.id = :idRole where id = :idUser";
+	private static final String USER_PARAMETER = "idUser";
+	private static final String ROLE_PARAMETER = "idRole";
+	
 	@Override
 	public Class<User> getGenericClass() {
 		return User.class;
@@ -40,6 +46,25 @@ public class UserDaoImpl extends AbstractDaoImpl<User> implements UserDao {
 	public List<DictionaryItem> getLecturerDictionary() {
 		return getDictionaryByCriteria((root,builder,query) -> {
 			//query.multiselect(root.get(User_.id),root.join(User_.details).get(UserDetails_.name)).where(builder.equal(root.get(User_.role),(RoleEnum.LECTURER)));
+		});
+	}
+
+	@Override
+	public void updateUserRole(Long idUser, Long idRole) {
+		Session session = getSession();
+		Query query = session.createQuery(UPDATE_USER_ROLE_QUERY);
+		query.setParameter(USER_PARAMETER, idUser);
+		query.setParameter(ROLE_PARAMETER, idRole);
+		query.executeUpdate();
+		User user = session.get(User.class, idUser);
+		user.getAuthorities().clear();
+		session.merge(user);
+	}
+
+	@Override
+	public List<DictionaryItem> getUserDictionary() {
+		return getDictionaryByCriteria((root,builder,query) -> {
+			query.multiselect(root.get(User_.id),root.join(User_.details).get(UserDetails_.name));
 		});
 	}
 

@@ -11,9 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import skgspl.dao.api.AbstractDao;
 import skgspl.dao.api.AuthorityDao;
 import skgspl.dao.api.RoleDao;
+import skgspl.dao.api.UserDao;
 import skgspl.entity.Authority;
 import skgspl.entity.Role;
 import skgspl.entity.RoleAuthority;
+import skgspl.entity.User;
 import skgspl.entity.util.DictionaryItem;
 import skgspl.service.api.AuthorityService;
 
@@ -25,6 +27,8 @@ public class AuthorityServiceImpl extends AbstractServiceImpl<Authority> impleme
 	AuthorityDao authorityDao;
 	@Autowired
 	RoleDao roleDao;
+	@Autowired
+	UserDao userDao;
 
 	@Override
 	protected AbstractDao<Authority> getDao() {
@@ -41,10 +45,27 @@ public class AuthorityServiceImpl extends AbstractServiceImpl<Authority> impleme
 		role.setAuthorities(newAuthorities);
 		roleDao.update(role);
 	}
+	
+	@Override
+	public void updateAuthoritiesByUser(Long idUser, List<Long> authorities) {
+		User user = userDao.get(idUser);
+		user.setRole(null);
+		List<Authority> newAuthorities = new ArrayList<Authority>();
+		for(Long idAuthority:authorities) {
+			newAuthorities.add(authorityDao.get(idAuthority));
+		}
+		user.setAuthorities(newAuthorities);
+		userDao.update(user);
+	}
 
 	@Override
 	public List<DictionaryItem> getDictionaryByRole(Long idRole) {
 		return authorityDao.getDictionaryByRole(idRole);
+	}
+
+	@Override
+	public List<DictionaryItem> getDictionaryByUser(Long idUser) {
+		return authorityDao.getDictionaryByUser(idUser);
 	}
 
 }

@@ -9,4 +9,6 @@ public interface AuthorityDao extends AbstractDao<Authority> {
 
 	List<DictionaryItem> getDictionaryByRole(Long idRole);
 
+	List<DictionaryItem> getDictionaryByUser(Long idUser);
+
 }

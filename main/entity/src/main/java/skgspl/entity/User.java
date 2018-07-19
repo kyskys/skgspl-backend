@@ -1,6 +1,6 @@
 package skgspl.entity;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,7 +39,7 @@ public class User extends AbstractEntity {
 	@JoinTable( name = "user_authority", 
 				joinColumns = { @JoinColumn(name = "user_id") }, 
 				inverseJoinColumns = { @JoinColumn(name = "authority_id") })
-	private Set<Authority> authorities;
+	private List<Authority> authorities;
 
 	public String getPassword() {
 		return password;
@@ -73,11 +73,11 @@ public class User extends AbstractEntity {
 		this.details = details;
 	}
 
-	public Set<Authority> getAuthorities() {
+	public List<Authority> getAuthorities() {
 		return authorities;
 	}
 
-	public void setAuthorities(Set<Authority> authorities) {
+	public void setAuthorities(List<Authority> authorities) {
 		this.authorities = authorities;
 	}
 

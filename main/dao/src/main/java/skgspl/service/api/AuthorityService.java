@@ -10,4 +10,8 @@ public interface AuthorityService extends AbstractService<Authority> {
 	void updateAuthoritiesByRole(Long idRole, List<Long> authorities);
 
 	List<DictionaryItem> getDictionaryByRole(Long idRole);
+
+	void updateAuthoritiesByUser(Long idUser, List<Long> authorities);
+
+	List<DictionaryItem> getDictionaryByUser(Long idUser);
 }
